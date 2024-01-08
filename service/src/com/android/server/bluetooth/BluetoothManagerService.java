@@ -1545,8 +1545,11 @@ class BluetoothManagerService {
     /** set APM enhancement feature state */
     @VisibleForTesting
     void setApmEnhancementState() {
-        Settings.Global.putInt(
+        // preserve user settings
+        final int apm = Settings.Global.getInt(
                 mContext.getContentResolver(), APM_ENHANCEMENT, DEFAULT_APM_ENHANCEMENT_STATE);
+        Settings.Global.putInt(
+                mContext.getContentResolver(), APM_ENHANCEMENT, apm);
     }
 
     /** Called when switching to a different foreground user. */
