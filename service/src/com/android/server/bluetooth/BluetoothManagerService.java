@@ -83,7 +83,6 @@ import com.android.bluetooth.flags.FeatureFlags;
 import com.android.internal.annotations.GuardedBy;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.modules.utils.HandlerExecutor;
-import com.android.modules.utils.SynchronousResultReceiver;
 import com.android.server.BluetoothManagerServiceDumpProto;
 import com.android.server.bluetooth.airplane.AirplaneModeListener;
 import com.android.server.bluetooth.satellite.SatelliteModeListener;
@@ -706,10 +705,7 @@ class BluetoothManagerService {
             try {
                 // Fetch adapter connection state synchronously and assume disconnected on error
                 if (mAdapter == null) return;
-                final SynchronousResultReceiver<Integer> recv = SynchronousResultReceiver.get();
-                mAdapter.getAdapterConnectionState(recv);
-                int adapterConnectionState = recv.awaitResultNoInterrupt(getSyncTimeout())
-                        .getValue(BluetoothAdapter.STATE_DISCONNECTED);
+                int adapterConnectionState = mAdapter.getConnectionState();
 
                 if (getState() == BluetoothAdapter.STATE_ON
                         && adapterConnectionState == BluetoothAdapter.STATE_DISCONNECTED) {
