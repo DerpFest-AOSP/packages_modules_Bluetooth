@@ -671,6 +671,9 @@ class BluetoothManagerService {
                                         .sendToTarget();
                             }
                         }
+                    } else if (BluetoothAdapter.ACTION_STATE_CHANGED.equals(action)
+                            || BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED.equals(action)) {
+                        setBluetoothTimeout();
                     } else if (action.equals(Intent.ACTION_SHUTDOWN)) {
                         Log.i(TAG, "Device is shutting down.");
                         mShutdownInProgress = true;
@@ -821,6 +824,7 @@ class BluetoothManagerService {
         public void onAlarm() {
             if (mAdapter == null) return;
             if (!isEnabled()) return;
+            if (isMediaProfileConnected()) return;
             try {
                 if (!mAdapter.disable(mContext.getAttributionSource()))
                     Log.e(TAG, "setBluetoothTimeout() failed");
