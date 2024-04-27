@@ -825,12 +825,7 @@ class BluetoothManagerService {
             if (mAdapter == null) return;
             if (!isEnabled()) return;
             if (isMediaProfileConnected()) return;
-            try {
-                if (!mAdapter.disable(mContext.getAttributionSource()))
-                    Log.e(TAG, "setBluetoothTimeout() failed");
-            } catch (RemoteException | TimeoutException e) {
-                Slog.e(TAG, "setBluetoothTimeout() failed", e);
-            }
+            disable(TAG, true);
         }
     };
 
